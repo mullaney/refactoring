@@ -7,47 +7,48 @@ function statement (invoice, plays) {
       minimumFractionDigits: 2}).format;
 
   for (let perf of invoice.performances) {
-    let thisAmount = amountFor(perf, plays);
+    let thisAmount = amountFor(perf);
 
     // add volume credits
     volumeCredits += Math.max(perf.audience - 30, 0);
     // add extra credit for every ten comedy attendees
-    if ("comedy" === playFor(perf, plays).type) volumeCredits += Math.floor(perf.audience / 5);
+    if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
 
     // print line for this order
-    result += `  ${playFor(perf, plays).name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
+    result += `  ${playFor(perf).name}: ${format(thisAmount/100)} (${perf.audience} seats)\n`;
     totalAmount += thisAmount;
   }
   result += `Amount owed is ${format(totalAmount/100)}\n`
   result += `You earned ${volumeCredits} credits\n`
   return result
-}
 
-function amountFor(aPerformance, plays) {
-  let result = 0
-  switch (playFor(aPerformance, plays).type) {
-    case "tragedy":
-      result = 40000;
-      if (aPerformance.audience > 30) {
-        result += 1000 * (aPerformance.audience - 30);
-      }
-      break;
-    case "comedy":
-      result = 30000;
-      if (aPerformance.audience > 20) {
-        result += 1000 + 500 * (aPerformance.audience - 20);
-      }
-      result += 300 * aPerformance.audience;
-      break;
-    default:
-      throw new Error(`unknown type: ${playFor(aPerformance, plays).type}`);
+  function amountFor(aPerformance) {
+    let result = 0
+    switch (playFor(aPerformance).type) {
+      case "tragedy":
+        result = 40000;
+        if (aPerformance.audience > 30) {
+          result += 1000 * (aPerformance.audience - 30);
+        }
+        break;
+      case "comedy":
+        result = 30000;
+        if (aPerformance.audience > 20) {
+          result += 1000 + 500 * (aPerformance.audience - 20);
+        }
+        result += 300 * aPerformance.audience;
+        break;
+      default:
+        throw new Error(`unknown type: ${playFor(aPerformance).type}`);
+    }
+    return result
   }
-  return result
+
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID]
+  }
 }
 
-function playFor(aPerformance, plays) {
-  return plays[aPerformance.playID]
-}
 
 export {
   statement
