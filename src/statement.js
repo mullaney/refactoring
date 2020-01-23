@@ -1,6 +1,6 @@
 function statement (invoice, plays) {
   let totalAmount = 0;
-  let result = `Statement for ${invoice.customer}\n`
+  let result = `Statement for ${invoice.customer}\n`;
 
   for (let perf of invoice.performances) {
     result += `  ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience} seats)\n`;
@@ -9,15 +9,15 @@ function statement (invoice, plays) {
 
   let volumeCredits = 0;
   for (let perf of invoice.performances) {
-    volumeCredits += volumeCreditsFor(perf)
+    volumeCredits += volumeCreditsFor(perf);
   }
 
-  result += `Amount owed is ${usd(totalAmount)}\n`
-  result += `You earned ${volumeCredits} credits\n`
-  return result
+  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `You earned ${volumeCredits} credits\n`;
+  return result;
 
   function amountFor(aPerformance) {
-    let result = 0
+    let result = 0;
     switch (playFor(aPerformance).type) {
       case "tragedy":
         result = 40000;
@@ -35,7 +35,7 @@ function statement (invoice, plays) {
       default:
         throw new Error(`unknown type: ${playFor(aPerformance).type}`);
     }
-    return result
+    return result;
   }
 
   function playFor(aPerformance) {
@@ -43,10 +43,12 @@ function statement (invoice, plays) {
   }
 
   function volumeCreditsFor(aPerformance) {
-    let result = 0
-    result += Math.max(aPerformance.audience - 30, 0)
-    if ("comedy" === playFor(aPerformance).type) result += Math.floor(aPerformance.audience / 5)
-    return result
+    let result = 0;
+    result += Math.max(aPerformance.audience - 30, 0);
+    if ("comedy" === playFor(aPerformance).type) {
+      result += Math.floor(aPerformance.audience / 5);
+    }
+    return result;
   }
 
   function usd(aNumber) {
