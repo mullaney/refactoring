@@ -1,5 +1,5 @@
 import { expect } from "chai"
-import { statement } from "../src/statement"
+import { statement, htmlStatement } from "../src/statement"
 import invoices from "../data/invoices.json"
 import plays from "../data/plays.json"
 
@@ -45,3 +45,39 @@ You earned 47 credits
   })
 });
 
+describe('#htmlStatement()', function() {
+  var invoice, comedyInvoice, tragedyInvoice
+
+  beforeEach(function() {
+    invoice = invoices[0],
+    comedyInvoice = invoices[1],
+    tragedyInvoice = invoices[2]
+  });
+
+  context('with valid invoice and play', function() {
+    it('should return a valid statement', function() {
+      const myStatement = htmlStatement(invoice, plays)
+      expect(myStatement).to.include('<em>$1,640.00</em>')
+      expect(myStatement).to.include('<em>47</em>')
+      expect(myStatement).to.include('BigCo')
+    })
+  })
+
+  context('with only a comedy', function() {
+    it ('should return the correct amounts', function() {
+      const myStatement = htmlStatement(comedyInvoice, plays)
+      expect(myStatement).to.include('57')
+      expect(myStatement).to.include('$666.00')
+      expect(myStatement).to.include('38')
+    })
+  })
+
+  context('with only a tragedy', function() {
+    it ('should return the correct amounts', function() {
+      const myStatement = htmlStatement(tragedyInvoice, plays)
+      expect(myStatement).to.include('13')
+      expect(myStatement).to.include('$400.00')
+      expect(myStatement).to.include('<em>0</em>')
+    })
+  })
+});

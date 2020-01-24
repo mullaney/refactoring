@@ -14,6 +14,23 @@ function renderPlainText (data) {
   return result;
 }
 
+function htmlStatement(invoice, plays) {
+  return renderHTML(createStatementData(invoice, plays));
+}
+
+function renderHTML(data) {
+  let result = `<h1>Statement for ${data.customer}</h1>`;
+  result += "<table>";
+  result += "<tr><th>play</th><th>seats</th><th>costs</th></tr>";
+  result += data.performances.map(perf => {
+    return `<tr><td>${perf.play.name}</td><td>${perf.audience}</td><td>${usd(perf.amount)}</td></tr>`;
+  }).join("\n");
+  result += "</table>";
+  result += `<p>Amount owed is <em>${usd(data.totalAmount)}</em></p>`;
+  result += `<p>You earned <em>${data.totalVolumeCredits}</em></p>`;
+  return result;
+}
+
 function usd(aNumber) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -23,6 +40,6 @@ function usd(aNumber) {
 }
 
 export {
-  statement
+  statement,
+  htmlStatement
 }
-
