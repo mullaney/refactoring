@@ -19,10 +19,6 @@ export default function createStatementData (invoice, plays) {
   function playFor(aPerformance) {
     return plays[aPerformance.playID]
   }
-
-  function amountFor(aPerformance) {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;
-  }
 }
 
 class PerformanceCalculator {
